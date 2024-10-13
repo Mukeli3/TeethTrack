@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <h2>Login</h2>
@@ -14,7 +14,12 @@
         <label for="password">Password:</label>
         <input type="password" id="password" required><br>
         <button type="submit">Login</button>
+		
     </form>
-    <script src="auth.js"></script>
+	<div class="back-button-container">
+        <span class="back-arrow">&larr;</span>
+        <button class="back-button" onclick="window.history.back()">Back</button>
+    </div>
+    <script src="js/auth.js"></script>
 </body>
 </html>
