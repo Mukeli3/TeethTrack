@@ -1,13 +1,18 @@
 import os
+from dotenv load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate # automate db schema management
+from flask_jwt_extended import JWTManager
 
 
+load_dotenv()
 db = SQLAlchemy() # instantiate SQLAlchemy
 # manage user login sessions & restrict access to certain routes
 login_manager = LoginManager()
+jwt = JWTManager()
+
 def create_app():
     """
     Function creates and configures the Flask app
@@ -22,16 +27,16 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
-    Migrate(app, db) # initialize flask_migrate
+    migrate = Migrate(app, db) # initialize flask_migrate
 
 
     # Register blueprints (routes)
-    from app.routes.auth import auth_bp
+    from app.routes.auth import auth
     from app.routes.patient_route import patient_bp
     from app.routes.dentist_route import dentist_bp
-    from .routes.billing import billing_bp
+    from app.routes.billing_route import billing_bp
 
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(auth)
     app.register_blueprint(patient_bp)
     app.register_blueprint(dentist_bp)
     app.register_blueprint(billing_bp)
