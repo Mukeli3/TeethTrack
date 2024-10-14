@@ -1,16 +1,18 @@
 from flask import Blueprint, request, jsonify
 from ..models.user_model import User
-from app import db
-import bcrypt # password hashing
-import jwt
+from app import db, jwt
+import bcrypt  # password hashing
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt
+from flask import current_app as app  # accessing app configs
 import datetime
 from functools import wraps
-from flask import current_app as app # accessing app configs
 
 auth = Blueprint('auth', __name__)
 
-def required(f): # helper function to require JWT tokens
-    @wraps
+blacklist = set()
+
+def required(f):  # helper function to require JWT tokens
+    @wraps(f)
     def decorated(*args, **kwargs):
         token = request.headers.get('x-access-tokens')
         if not token:
@@ -22,9 +24,13 @@ def required(f): # helper function to require JWT tokens
         except Exception as e:
             return jsonify({'message': 'Invalid Token'}), 401
 
-        return f(current, *args, **kwargs) # current user
+        return f(current, *args, **kwargs)  # current user
 
     return decorated
+
+@auth.route("/")
+def index():
+    return "Welcome to ToothTrack!"
 
 @auth.route('/register', methods=['POST'])
 def register():
@@ -32,7 +38,7 @@ def register():
     name = data.get('name')
     email = data.get('email')
     password = data.get('password')
-    role = data.get('role', 'patient') # default role
+    role = data.get('role', 'patient')  # default role
 
     if not email or not password:
         return jsonify({'msg': 'Missing email or password'}), 400
@@ -42,8 +48,8 @@ def register():
 
     # use bcrypt, hash password
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    new = User(email=email, password=hashed)
-    db.session.add(new)
+    new_user = User(email=email, password=hashed)
+    db.session.add(new_user)
     db.session.commit()
 
     return jsonify({'msg': 'User successfully registered'}), 201
@@ -62,22 +68,17 @@ def login():
     if not bcrypt.checkpw(password.encode('utf-8'), user.password):
         return jsonify({'msg': 'Invalid password'}), 401
 
-    # generate JWT token
-    token = jwt.token({
-        'user_id': user.id,
-        'role': user.role,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=3)
-        }, app.config['SECRET_KEY'], algorithm="HS256")
+    # Generate JWT token
+    token = create_access_token(identity={'user_id': user.id, 'role': user.role}, expires_delta=datetime.timedelta(hours=1))
 
     return jsonify({'token': token})
 
-# logout the user, invalidate tokens client-side
+# Logout the user, invalidate tokens client-side
 @auth.route('/logout', methods=['POST'])
 @required
 def logout(current):
-    # in practical sense, clent should discard the token
     jti = get_jwt()['jti']  # JWT ID (token unique identifier)
-    blacklist.add(jti) # add to blacklist, token's jti
+    blacklist.add(jti)  # Add to blacklist, token's jti
     return jsonify({'msg': 'Successfully logged out'}), 200
 
 # Add a callback to check if the token is in the blacklist
