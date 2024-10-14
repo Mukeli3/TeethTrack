@@ -68,24 +68,24 @@ def login():
     if not bcrypt.checkpw(password.encode('utf-8'), user.password):
         return jsonify({'msg': 'Invalid password'}), 401
 
-    # Generate JWT token
+    # generate JWT token
     token = create_access_token(identity={'user_id': user.id, 'role': user.role}, expires_delta=datetime.timedelta(hours=1))
 
     return jsonify({'token': token})
 
-# Logout the user, invalidate tokens client-side
+# logout the user, invalidate tokens client-side
 @auth.route('/logout', methods=['POST'])
 @required
 def logout(current):
     jti = get_jwt()['jti']  # JWT ID (token unique identifier)
-    blacklist.add(jti)  # Add to blacklist, token's jti
+    blacklist.add(jti)  # add to blacklist, token's jti
     return jsonify({'msg': 'Successfully logged out'}), 200
 
-# Add a callback to check if the token is in the blacklist
+# add a callback to check if the token is in the blacklist
 @jwt.token_in_blocklist_loader
 def check_revoked(jwt_header, jwt_payload):
     """
     Callback function to check if a token is blacklisted (revoked).
     """
     jti = jwt_payload['jti']
-    return jti in blacklist  # Returns True if the token's jti is in the blacklist
+    return jti in blacklist  # returns True if the token's jti is in the blacklist
