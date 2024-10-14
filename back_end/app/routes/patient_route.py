@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import Appointment, patient_records, User, db
-
+from ..models import appointment, patient_records, User
+from app import db
 
 patient_bp = Blueprint('patient', __name__)
 
@@ -46,7 +46,7 @@ def view_history():
     if not records:
         return jsonify({'msg': 'Treatment history not found'})
 
-    treatment_history = [{'notes': record.notes, 'history': record.treatment_history) for record in records]
+    treatment_history = [{'notes': record.notes, 'history': record.treatment_history} for record in records]
 
     return jsonify(treatment_history), 200
 
