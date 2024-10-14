@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import Billing, Appointment, User, db
+from ..models import billing_table, appointment, User
+from app import db
 
 billing_bp = Blueprint('billing', __name__)
 
@@ -28,11 +29,11 @@ def view_bils():
 @billing_bp.route('/pay_bill/<int:billing_id>', methods=['POST'])
 @jwt_required()
 def pay_bill(billing_id):
-    current_id get_jwt_identity()
+    current_id = get_jwt_identity()
     bill = Billing.query.get(billing_id)
 
     if not bill or bill.user_id != current_id:
-        return jsonify('error': 'Billing record not found'}), 404
+        return jsonify({'error': 'Billing record not found'}), 404
 
     if bill.status == 'paid':
         return jsonify({'msg': 'The bill is already paid'}), 400
@@ -71,4 +72,4 @@ def update_billing():
 
     db.session.commit()
 
-    return jsonify('msg': 'Billing record successfully updated'}), 200
+    return jsonify({'msg': 'Billing record successfully updated'}), 200
