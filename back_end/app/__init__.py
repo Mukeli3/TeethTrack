@@ -1,5 +1,5 @@
 import os
-from dotenv load_dotenv
+from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -24,6 +24,9 @@ def create_app():
     app.config.from_object('app.config.Config')
     db.init_app(app) # initialize SQLAlchemy with the app
 
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+
+
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
 
@@ -35,11 +38,13 @@ def create_app():
     from app.routes.patient_route import patient_bp
     from app.routes.dentist_route import dentist_bp
     from app.routes.billing_route import billing_bp
+    from app.routes.search_bp import search_bp
 
     app.register_blueprint(auth)
     app.register_blueprint(patient_bp)
     app.register_blueprint(dentist_bp)
     app.register_blueprint(billing_bp)
+     app.register_blueprint(appointments)
 
     with app.app_context():
         db.create_all() # create db tables
