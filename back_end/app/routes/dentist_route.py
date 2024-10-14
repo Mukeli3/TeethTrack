@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import Appointment, patient_records, User, db
+from app.models import appointment, patient_records, User
+from app import db
 
 
 dentist_bp = Blueprint('dentist', __name__)
@@ -47,7 +48,7 @@ def update_record():
     else:
         return jsonify({'error': 'Record not found'}), 404
 
-@dentist_route('/add_notes', methods=['POST'])
+@dentist_bp.route('/add_notes', methods=['POST'])
 @jwt_required()
 def add_notes():
     current_id = get_jwt_identity()
