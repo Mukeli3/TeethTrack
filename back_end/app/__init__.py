@@ -38,13 +38,15 @@ def create_app():
     from app.routes.patient_route import patient_bp
     from app.routes.dentist_route import dentist_bp
     from app.routes.billing_route import billing_bp
-    from app.routes.search_bp import search_bp
+    from app.routes.search_route import search_bp
+    from app.routes.dashboard_route import dashboard_bp
 
     app.register_blueprint(auth)
     app.register_blueprint(patient_bp)
     app.register_blueprint(dentist_bp)
     app.register_blueprint(billing_bp)
-     app.register_blueprint(appointments)
+    app.register_blueprint(search_bp)
+    app.register_blueprint(dashboard_bp)
 
     with app.app_context():
         db.create_all() # create db tables
