@@ -1,5 +1,5 @@
-from flask import Blueprint, request, jsonify
-from ..models.user_model import User
+from flask import Blueprint, request, jsonify, render_template, url_for
+from app.models.user_model import User
 from app import db, jwt
 import bcrypt  # password hashing
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt
@@ -23,17 +23,25 @@ def required(f):  # helper function to require JWT tokens
             current = User.query.filter_by(id=data['user_id']).first()
         except Exception as e:
             return jsonify({'message': 'Invalid Token'}), 401
-
+ 
         return f(current, *args, **kwargs)  # current user
 
     return decorated
 
 @auth.route("/")
 def index():
-    return "Welcome to ToothTrack!"
+    return render_template('index.html')
 
-@auth.route('/register', methods=['POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    role = request.form.get('role')
+
     data = request.get_json()
     name = data.get('name')
     email = data.get('email')
@@ -54,8 +62,16 @@ def register():
 
     return jsonify({'msg': 'User successfully registered'}), 201
 
-@auth.route('/login', methods=['POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        render_template('login.html')
+
+    email = request.form.get('email')
+    password = request.form.get('password')
+    print("Form Data Received")
+    print(request.headers)
+
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -74,9 +90,12 @@ def login():
     return jsonify({'token': token})
 
 # logout the user, invalidate tokens client-side
-@auth.route('/logout', methods=['POST'])
+@auth.route('/logout', methods=['GET', 'POST'])
 @required
 def logout(current):
+    if request.method == 'GET':
+        return redirect(url_for('auth.index'))
+
     jti = get_jwt()['jti']  # JWT ID (token unique identifier)
     blacklist.add(jti)  # add to blacklist, token's jti
     return jsonify({'msg': 'Successfully logged out'}), 200
