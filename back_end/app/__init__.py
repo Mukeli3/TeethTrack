@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate # automate db schema management
 from flask_jwt_extended import JWTManager
+from app.models.user_model import User
 
 
 load_dotenv()
@@ -13,13 +14,17 @@ db = SQLAlchemy() # instantiate SQLAlchemy
 login_manager = LoginManager()
 jwt = JWTManager()
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 def create_app():
     """
     Function creates and configures the Flask app
     Returns:
          the configured flask app instancei
     """
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='static')
 
     app.config.from_object('app.config.Config')
     db.init_app(app) # initialize SQLAlchemy with the app
