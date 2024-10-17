@@ -1,8 +1,8 @@
-from flask import Blueprint, request, jsonify, render_template, url_for, redirect
+from flask import Blueprint, request, jsonify, render_template, url_for
 from app.models.user_model import User
 from app import db, jwt
 import bcrypt  # password hashing
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt
 from flask import current_app as app  # accessing app configs
 import datetime
 from functools import wraps
@@ -11,8 +11,7 @@ auth = Blueprint('auth', __name__)
 
 blacklist = set()
 
-# Helper function to require JWT tokens
-def required(f):
+def required(f):  # helper function to require JWT tokens
     @wraps(f)
     def decorated(*args, **kwargs):
         token = request.headers.get('x-access-tokens')
@@ -33,21 +32,21 @@ def required(f):
 def index():
     return render_template('index.html')
 
-@auth.route('/register', methods=['POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
-    content_type = request.headers.get('Content-Type')
-    
-    if content_type == 'application/json':
-        data = request.get_json()
-        name = data.get('name')
-        email = data.get('email')
-        password = data.get('password')
-        role = data.get('role', 'patient')  # default role
-    else:
-        name = request.form.get('name')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        role = request.form.get('role', 'patient')  # default role
+    if request.method == 'GET':
+        return render_template('register.html')
+
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    role = request.form.get('role')
+
+    data = request.get_json()
+    name = data.get('name')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role', 'patient')  # default role
 
     if not email or not password:
         return jsonify({'msg': 'Missing email or password'}), 400
@@ -57,23 +56,25 @@ def register():
 
     # use bcrypt, hash password
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    new_user = User(email=email, password=hashed, role=role)
+    new_user = User(email=email, password=hashed)
     db.session.add(new_user)
     db.session.commit()
 
     return jsonify({'msg': 'User successfully registered'}), 201
 
-@auth.route('/login', methods=['POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
-    content_type = request.headers.get('Content-Type')
+    if request.method == 'GET':
+        render_template('login.html')
 
-    if content_type == 'application/json':
-        data = request.get_json()
-        email = data.get('email')
-        password = data.get('password')
-    else:
-        email = request.form.get('email')
-        password = request.form.get('password')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    # print("Form Data Received")
+    # print(request.headers)
+
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
 
     user = User.query.filter_by(email=email).first()
 
@@ -88,9 +89,13 @@ def login():
 
     return jsonify({'token': token})
 
-@auth.route('/logout', methods=['POST'])
+# logout the user, invalidate tokens client-side
+@auth.route('/logout', methods=['GET', 'POST'])
 @required
 def logout(current):
+    if request.method == 'GET':
+        return redirect(url_for('auth.index'))
+
     jti = get_jwt()['jti']  # JWT ID (token unique identifier)
     blacklist.add(jti)  # add to blacklist, token's jti
     return jsonify({'msg': 'Successfully logged out'}), 200
