@@ -3,46 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Tooth Track</title>
+    <title>Register</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <header>
-        <h1>Register on Tooth Track</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="register.html" class="active">Register</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section>
-            <h2>Register</h2>
-            <form id="registerForm" action="/register" method="POST">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" placeholder="Enter your name" required><br>
-                
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required><br>
-                
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required><br>
-                
-                <label for="role">Role:</label>
-                <select id="role" name="role">
-                    <option value="patient">Patient</option>
-                    <option value="dentist">Dentist</option>
-                </select><br>
+<header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="Login.html">Login</a></li>
+            <li><a href="register.html">Register</a></li>
+        </ul>
+    </nav>
+</header>
 
-                <button type="submit">Register</button>
-            </form>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2024 Tooth Track. All rights reserved.</p>
-    </footer>
-    <script src="js/script.js"></script> 
+<body>
+    <h2>Register</h2>
+    <form id="registration-form">
+    <h2>Create Account</h2>
+    <input type="text" id="name" name="name" placeholder="Full Name" required>
+    <input type="email" id="email" name="email" placeholder="Email" required>
+    <input type="password" id="password" name="password" placeholder="Password" required>
+    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+    <input type="tel" id="phone" name="phone" placeholder="Phone Number (optional)">
+    <button type="submit">Register</button>
+</form>
+
+	<div class="back-button-container">
+        <span class="back-arrow">&larr;</span>
+        <button class="back-button" onclick="window.history.back()">Back</button>
+    </div>
+    <script src="js/auth.js"></script>
 </body>
 </html>
