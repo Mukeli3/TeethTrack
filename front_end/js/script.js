@@ -19,67 +19,30 @@ document.addEventListener("DOMContentLoaded", function() {
             if (email === '' || password === '') {
                 alert('Please fill in all fields');
             } else {
-                fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.token) {
-                        showNotification('Login successful!');
-                        // Save token and redirect or perform other logic
-                    } else {
-                        showNotification('Login failed: ' + data.msg);
-                    }
-                })
-                .catch(error => {
-                    showNotification('Error: ' + error.message);
-                });
+                alert('Login successful!');
             }
         });
     }
 
-    const registerForm = document.querySelector('#registerForm');
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.querySelector('#name').value;
-            const email = document.querySelector('#email').value;
-            const password = document.querySelector('#password').value;
-            const role = document.querySelector('#role').value;
+    // Slider functionality
+    let currentSlide = 0;
 
-            if (name === '' || email === '' || password === '') {
-                alert('Please fill in all fields');
-            } else {
-                fetch('/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        password: password,
-                        role: role
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    showNotification('Registration successful!');
-                    // Handle post-registration logic
-                })
-                .catch(error => {
-                    showNotification('Error: ' + error.message);
-                });
-            }
-        });
+    function changeSlide(direction) {
+        const slides = document.querySelectorAll('.slide');
+        slides[currentSlide].classList.remove('active');
+
+        currentSlide = (currentSlide + direction + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+
+        // Adjust the slides' position
+        const slideWidth = slides[0].clientWidth;
+        document.querySelector('.slides').style.transform = `translateX(-${currentSlide * slideWidth}px)`;
     }
+
+    // Automatically change slides every 5 seconds
+    setInterval(() => {
+        changeSlide(1);
+    }, 5000);
 });
 
 function showNotification(message) {
