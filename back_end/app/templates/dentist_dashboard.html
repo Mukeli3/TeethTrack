@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dentist Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Dentist Dashboard</h1>
+        <button id="logout">Logout</button>
+    </header>
+
+    <main>
+	<div id="welcomeMessage"></div>
+        
+        <section id="appointments">
+            <h2>Upcoming Appointments</h2>
+            <div id="appointmentList"></div>
+        </section>
+
+        <section id="updateRecords">
+            <h2>Update Patient Records</h2>
+            <form id="updateRecordForm">
+                <label for="patientEmail">Patient Email:</label>
+                <input type="email" id="patientEmail" required>
+                
+                <label for="treatmentNotes">Treatment Notes:</label>
+                <textarea id="treatmentNotes" required></textarea>
+                
+                <button type="submit">Update Record</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/dentist_dashboard.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const username = localStorage.getItem('username');
+            const welcomeMessage = document.getElementById("welcomeMessage");
+            welcomeMessage.innerHTML = `<h2>Welcome to your dashboard, ${username}!</h2>`;
+        });
+    </script>
+    <script>
+     document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            // Redirect to login if token is not present
+            window.location.href = '/login';
+            return;
+        }
+
+        fetch('/dentist_dashboard', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`  // Include token in the Authorization header
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle the response data for the dashboard
+            console.log(data);
+            // Populate your dashboard UI with the data
+        })
+        .catch(error => {
+            console.error('Error fetching dashboard:', error);
+        });
+    });
+</script>
+</body>
+</html>
