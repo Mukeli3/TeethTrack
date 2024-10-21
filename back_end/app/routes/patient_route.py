@@ -1,9 +1,32 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from ..models import appointment, patient_records, User
+from ..models import Appointment, PatientRecords, User
 from app import db
 
 patient_bp = Blueprint('patient', __name__)
+
+@patient_bp.route('/dashboard', methods=['GET'])
+@jwt_required()
+def patient_dashboard():
+    current_id = get_jwt_identity()
+    user = User.query.get(current_id)
+
+    if user.role != 'patient':
+        return jsonify({'error': 'Unauthorized access'}), 403
+
+    # fetch patient-specific data
+    appointments = Appointment.query.filter_by(user_id=current_id).all()
+    records = PatientRecords.query.filter_by(user_id=current_id).all()
+
+    # format the data
+    appointments_data = [{'date': appt.appointment_date, 'status': appt.status} for appt in appointments]
+    records_data = [{'date': rec.date, 'treatment': rec.treatment, 'notes': rec.notes} for rec in records]
+
+    return jsonify({
+        'success': True,
+        'appointments': appointments_data,
+        'records': records_data
+    })
 
 @patient_bp.route('/book_appointment', methods=['POST'])
 @jwt_required()
