@@ -1,7 +1,6 @@
 from flask_login import UserMixin
-from flask_sqlalchemy import SQLAlchemy
+from app import db
 
-db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -13,4 +12,5 @@ class User(UserMixin, db.Model):
     role = db.Column(db.String(20), nullable=False)
 
     # relationship - One-to-Many
-    appointments = db.relationship('appointment', backref='user', lazy=True)
+    patient_appointments = db.relationship('Appointment', foreign_keys='Appointment.user_id', backref='patient', lazy='select')
+    dentist_appointments = db.relationship('Appointment', foreign_keys='Appointment.dentist_id', backref='dentist', lazy='select')
