@@ -1,12 +1,12 @@
-from flask_sqlalchemy import SQLAlchemy
+from app import db
 from datetime import datetime
 
-db = SQLAlchemy()
 
-class appointment(db.Model):
+class Appointment(db.Model):
     __tablename__ = 'appointment'
     appointment_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    dentist_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
     appointment = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(20), nullable=False)
 
