@@ -140,8 +140,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## References
 
 - **Daniel Litunya**  
-  Full Stack Developer  
-  Email: daniellitunya@example.com  
+  Full Stack Developer 
   GitHub: [DANIELLITUNYA-CODER](https://github.com/DANIELLITUNYA-CODER)
 
 - **Mukeli Kavivya**  
