@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from datetime import datetime
-from ..models.appointment_model import appointment
+from ..models.appointment_model import Appointment
 
 
 search_bp = Blueprint('appointments', __name__)

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from ..models import billing_table, appointment, User
+from ..models import Billing, Appointment, User
 from app import db
 
 billing_bp = Blueprint('billing', __name__)

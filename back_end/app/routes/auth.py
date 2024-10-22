@@ -83,16 +83,9 @@ def login():
     if user:
         try:
             if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
-                access_token = create_access_token(identity={"user_id": user.user_id, "role": user.role, "username": user.name})
+                access_token = create_access_token(identity={"user_id": user.user_id, "role": user.role})
                 current_app.logger.info(f"Successful login for email: {email}")
-                return jsonify({
-                    "message": "Login successful",
-                    "token": access_token,
-                    "user": {
-                    "username": user.name,
-                    "role": user.role
-                    }
-                }), 200
+                return jsonify({"message": "Login successful", "token": access_token, "user": {"role": user.role}}), 200
             else:
                 current_app.logger.warning(f"Invalid password for email: {email}")
                 return jsonify({"error": "Invalid email or password"}), 401
@@ -121,28 +114,30 @@ def user_dashboard():
         return redirect(url_for('auth.login'))
 
 @auth.route('/dentist_dashboard', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def dentist_dashboard():
-    current_user_id = get_jwt_identity()  # Get the user ID from the JWT token
+    """ current_user_id = get_jwt_identity()  # Get the user ID from the JWT token
     user = User.query.get(current_user_id)  # Fetch the full user object from the database
 
     if user is None:
         return redirect(url_for('auth.login'))  # Redirect if user does not exist
 
-    current_app.logger.info(f"Accessing dentist dashboard for user: {user.username}")
-    return render_template('dentist_dashboard.html', user=user)  # Pass the full user object
+    current_app.logger.info(f"Accessing dentist dashboard for user: {user.username}") """
+    return render_template('dentist_dashboard.html')
 
 @auth.route('/patient_dashboard', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def patient_dashboard():
-    current_user_id = get_jwt_identity()  # Get the user ID from the JWT token
-    user = User.query.get(current_user_id)  # Fetch the full user object from the database
+    """ current_identity = get_jwt_identity()  # Get the user identity from the JWT token
+    role = current_identity.get('role')    # Extract the role from the JWT token
+
+    user = User.query.filter_by(role=role).first()  # Fetch the user based on the role
 
     if user is None:
         return redirect(url_for('auth.login'))  # Redirect if user does not exist
 
-    current_app.logger.info(f"Accessing patient dashboard for user: {user.username}")
-    return render_template('patient_dashboard.html', user=user)  # Pass the full user object
+    current_app.logger.info(f"Accessing patient dashboard for user: {user.username}") """
+    return render_template('patient_dashboard.html')
 
 @auth.route('/logout', methods=['POST'])
 @required

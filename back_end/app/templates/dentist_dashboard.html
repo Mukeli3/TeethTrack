@@ -4,75 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dentist Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Dentist Dashboard</h1>
-        <button id="logout">Logout</button>
-    </header>
+    <div class="dashboard">
+        <!-- Navigation bar -->
+        <nav class="navbar">
+            <h1>TeethTrack Dentist Dashboard</h1>
+            <ul class="nav-links">
+                <li><a href="#appointments">Appointments</a></li>
+                <li><a href="#records">Patient Records</a></li>
+                <li><a href="#billing">Billing</a></li>
+                <li><a href="#logout">Logout</a></li>
+            </ul>
+        </nav>
 
-    <main>
-	<div id="welcomeMessage"></div>
-        
-        <section id="appointments">
-            <h2>Upcoming Appointments</h2>
-            <div id="appointmentList"></div>
-        </section>
+        <!-- Main content area -->
+        <div class="main-content">
+            <!-- Appointments Panel -->
+            <div class="panel" id="appointments">
+                <h2>Appointments</h2>
+                <div id="appointmentList" class="list">
+                    <!-- Appointments will be loaded here -->
+                </div>
+            </div>
 
-        <section id="updateRecords">
-            <h2>Update Patient Records</h2>
-            <form id="updateRecordForm">
-                <label for="patientEmail">Patient Email:</label>
-                <input type="email" id="patientEmail" required>
-                
-                <label for="treatmentNotes">Treatment Notes:</label>
-                <textarea id="treatmentNotes" required></textarea>
-                
-                <button type="submit">Update Record</button>
-            </form>
-        </section>
-    </main>
+            <!-- Patient Records Panel -->
+            <div class="panel" id="records">
+                <h2>Patient Records</h2>
+                <div id="recordList" class="list">
+                    <!-- Records will be loaded here -->
+                </div>
+            </div>
 
-    <script src="{{ url_for('static', filename='js/dentist_dashboard.js') }}"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const username = localStorage.getItem('username');
-            const welcomeMessage = document.getElementById("welcomeMessage");
-            welcomeMessage.innerHTML = `<h2>Welcome to your dashboard, ${username}!</h2>`;
-        });
-    </script>
-    <script>
-     document.addEventListener('DOMContentLoaded', function() {
-        const token = localStorage.getItem('token');
+            <!-- Billing Panel -->
+            <div class="panel" id="billing">
+                <h2>Billing</h2>
+                <div id="billingList" class="list">
+                    <!-- Billing data will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="addAppointment">
+    <h3>Add New Appointment</h3>
+    <form id="addAppointmentForm">
+        <label for="newAppointmentDate">Date:</label>
+        <input type="date" id="newAppointmentDate" required>
 
-        if (!token) {
-            // Redirect to login if token is not present
-            window.location.href = '/login';
-            return;
-        }
+        <label for="newAppointmentDentist">Dentist:</label>
+        <input type="text" id="newAppointmentDentist" required>
 
-        fetch('/dentist_dashboard', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`  // Include token in the Authorization header
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Handle the response data for the dashboard
-            console.log(data);
-            // Populate your dashboard UI with the data
-        })
-        .catch(error => {
-            console.error('Error fetching dashboard:', error);
-        });
-    });
-</script>
+        <label for="newAppointmentStatus">Status:</label>
+        <input type="text" id="newAppointmentStatus" required>
+
+        <button type="submit">Add Appointment</button>
+    </form>
+</div>
+
+<div id="addRecord">
+    <h3>Add New Patient Record</h3>
+    <form id="addRecordForm">
+        <label for="newRecordDate">Date:</label>
+        <input type="date" id="newRecordDate" required>
+
+        <label for="newPatientDetails">Patient:</label>
+        <input type="text" id="newPatientDetails" required>
+
+        <label for="newTreatmentNotes">Notes:</label>
+	<input type="text" id="newTreatmentNotes" required>
+
+	<button type="submit">Add Patient Record</button>
+    </form>
+
+   <script src="{{ url_for('static', filename='js/dentist_dashboard.js') }}"></script>
 </body>
 </html>
+

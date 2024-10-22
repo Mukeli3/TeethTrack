@@ -1,9 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from app import db
 
-db = SQLAlchemy()
-
-class patient_records(db.Model):
+class PatientRecords(db.Model):
     __tablename__ = 'patient_records'
     record_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
@@ -12,4 +10,4 @@ class patient_records(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    user = db.relationship('User', backref='patient_records', lazy=True)
+    user = db.relationship('User', backref='records', lazy=True)

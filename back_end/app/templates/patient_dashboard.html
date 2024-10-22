@@ -4,56 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Dashboard</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Patient Dashboard</h1>
-        <button id="logout">Logout</button>
-    </header>
+    <div class="dashboard">
+        <nav class="navbar">
+            <h1>ToothTrack - Patient Dashboard</h1>
+            <ul class="nav-links">
+                <li><a href="#appointments">My Appointments</a></li>
+                <li><a href="#history">Treatment History</a></li>
+                <li><a href="#billing">Billing</a></li>
+                <li><a href="#logout">Logout</a></li>
+            </ul>
+        </nav>
 
-    <main>
-        <div id="welcomeMessage"></div> <!-- Welcome message will be inserted here -->
+        <div class="main-content">
+            <div class="panel" id="appointments">
+                <h2>My Appointments</h2>
+                <div id="patientAppointmentList" class="list">
+                </div>
+            </div>
 
-        <section id="bookAppointment">
-            <h2>Book an Appointment</h2>
-            <form id="bookAppointmentForm">
-                <label for="appointmentDate">Date:</label>
-                <input type="date" id="appointmentDate" required>
+            <div class="panel" id="history">
+                <h2>Treatment History</h2>
+                <div id="treatmentHistoryList" class="list">
+                </div>
+            </div>
 
-                <label for="appointmentTime">Time:</label>
-                <input type="time" id="appointmentTime" required>
-                
-                <button type="submit">Book Appointment</button>
-            </form>
-        </section>
+            <div class="panel" id="billing">
+                <h2>Billing</h2>
+                <div id="patientBillingList" class="list">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="addAppointment">
+    <h3>Add New Appointment</h3>
+    <form id="addAppointmentForm">
+        <label for="newAppointmentDate">Date:</label>
+        <input type="date" id="newAppointmentDate" required>
 
-        <section id="treatmentHistory">
-            <h2>Your Treatment History</h2>
-            <div id="historyList"></div>
-        </section>
+        <label for="newAppointmentDentist">Dentist:</label>
+        <input type="text" id="newAppointmentDentist" required>
 
-        <section id="updatePersonalInfo">
-            <h2>Update Personal Information</h2>
-            <form id="updateInfoForm">
-                <label for="name">Name:</label>
-                <input type="text" id="name" required>
+        <label for="newAppointmentStatus">Status:</label>
+        <input type="text" id="newAppointmentStatus" required>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" required>
+        <button type="submit">Add Appointment</button>
+    </form>
+</div>
 
-                <button type="submit">Update Information</button>
-            </form>
-        </section>
-    </main>
+<div id="addTreatment">
+    <h3>Add New Treatment Record</h3>
+    <form id="addTreatmentForm">
+        <label for="newTreatmentDate">Date:</label>
+        <input type="date" id="newTreatmentDate" required>
 
-    <script src="{{ url_for('static', filename='js/patient_dashboard.js') }}"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const username = localStorage.getItem('username');
-            const welcomeMessage = document.getElementById("welcomeMessage");
-            welcomeMessage.innerHTML = `<h2>Welcome to your dashboard, ${username}!</h2>`;
-        });
-    </script>
+        <label for="newTreatmentDetails">Treatment:</label>
+        <input type="text" id="newTreatmentDetails" required>
+
+        <label for="newTreatmentDentist">Dentist:</label>
+	<input type="text" id="newTreatmentDentist" required>
+
+	<button type="submit">Add Record</button>
+    </form>
+</div>
+   <script src="{{ url_for('static', filename='js/patient_dashboard.js') }}"></script>
 </body>
 </html>

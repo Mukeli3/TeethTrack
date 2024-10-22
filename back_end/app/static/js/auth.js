@@ -1,40 +1,60 @@
-// Function to fetch the dashboard on page load
-function fetchDashboard() {
-    const token = localStorage.getItem('token');
+// Function to check if the user is authenticated
+function isAuthenticated() {
+    return localStorage.getItem('token') !== null;
+}
 
-    if (!token) {
-        // If there's no token, redirect to login
-	console.warn('No token found, redirecting to login.');
+// Function to add token to request headers
+function getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+}
+
+// Modified fetchDashboard function
+function fetchDashboard() {
+    if (!isAuthenticated()) {
         window.location.href = '/login';
         return;
     }
-    console.log('Fetching dashboard with token:', token);
 
-    // Make the request to the dentist dashboard
     fetch('/dashboard', {
         method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}` // Include token in the Authorization header
-        }
+        headers: getAuthHeaders()
     })
     .then(response => {
         if (response.ok) {
-            return response.json(); // Process the response as JSON
+            return response.json();
+        } else if (response.status === 401) {
+            // Token might be expired
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+            throw new Error('Unauthorized access');
         } else {
-	    console.error('Failed to fetch dashboard:', response.status, response.statusText);
-            throw new Error('Unauthorized access'); // Handle unauthorized access
+            throw new Error('Failed to fetch dashboard');
         }
     })
     .then(data => {
-        // Handle successful response, e.g., update the UI with dashboard data
-       console.log('Dashboard data received:', data); // Debugging: Check response data
+        console.log('Dashboard data received:', data);
+        // Update UI with dashboard data
     })
     .catch(error => {
         console.error('Error fetching dashboard:', error);
-        // Optionally redirect to login on error
-        window.location.href = '/login';
     });
 }
+
+// Call this function when the dashboard pages load
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.pathname === '/patient_dashboard' || window.location.pathname === '/dentist_dashboard') {
+        if (!isAuthenticated()) {
+            window.location.href = '/login';
+        } else {
+            fetchDashboard();
+        }
+    }
+});
+
 // Login form handler
 document.getElementById("loginForm").addEventListener("submit", function(e) {
     e.preventDefault();
@@ -50,7 +70,8 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     .then(data => {
         console.log('Login response data:', data);
         if (data.token) {
-            localStorage.setItem('token', data.token); // Fix: Use data.token
+	    console.log('JWT Token:', data.token);
+            localStorage.setItem('token', data.token);
             localStorage.setItem('username', data.user.username); // Store username in localStorage
             localStorage.setItem('role', data.user.role); // Store user role in localStorage
 

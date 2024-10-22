@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 
 class Config:
@@ -16,6 +18,7 @@ class Config:
     # JWT Configuration
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
     JWT_ACCESS_TOKEN_EXPIRES = 3600
+    JWT_HEADER_TYPE = 'Bearer'
 
     DEBUG = False
     TESTING = False

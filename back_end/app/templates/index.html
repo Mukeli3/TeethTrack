@@ -7,9 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
- 
     <header>
-        <h1>Welcome to Tooth Track</h1>
         <nav>
             <ul>
                 <li><a href="{{ url_for('auth.index') }}">Home</a></li>
@@ -17,19 +15,57 @@
                 <li><a href="{{ url_for('auth.register') }}">Register</a></li>
             </ul>
         </nav>
+        <h1>Welcome to Teeth Track</h1>
     </header>
 
+    <div class="slider">
+        <div class="slides">
+            <div class="slide active">
+                <img src="{{ url_for('static', filename='images/image1.jpg') }}" alt="Dental Image 1">
+            </div>
+            <div class="slide">
+	        <img src="{{ url_for('static', filename='images/image2.jpg') }}" alt="Dental Image 2">
+            </div>
+            <div class="slide">
+		 <img src="{{ url_for('static', filename='images/image3.jpg') }}" alt="Dental Image 3">
+            </div>
+        </div>
+    </div>
 
-    <main>
-        <section>
-            <h2>Manage Your Dental Appointments</h2>
-            <p>Tooth Track helps patients and dentists easily manage appointments and treatment plans.</p>
-            <p>Log in or register to start tracking your dental health today!</p>
-        </section>
-    </main>
+    <section class="description">
+        <h2>Your Smile, Our Priority</h2>
+        <p>
+            At Tooth Track, we believe that a beautiful smile is a key component of overall health and well-being. Our dedicated team of dental professionals is committed to providing top-notch dental care tailored to your unique needs.
+        </p>
+        <p>
+            Whether you're in need of a routine check-up, cosmetic enhancements, or specialized treatments, we are here to help you achieve the smile of your dreams. Our state-of-the-art facilities and cutting-edge technology ensure that you receive the highest quality care in a comfortable environment.
+        </p>
+        <p>
+            Join our growing family of satisfied patients and experience the Tooth Track difference today! Your journey to optimal oral health starts here.
+        </p>
+    </section>
+
+    <section class="services">
+        <h2>Our Services</h2>
+        <div class="service-card">
+            <h3>Dental Checkup</h3>
+            <p>Comprehensive dental examinations to ensure your oral health.</p>
+        </div>
+        <div class="service-card">
+            <h3>Teeth Whitening</h3>
+            <p>Brighten your smile with our safe and effective whitening treatments.</p>
+        </div>
+        <div class="service-card">
+            <h3>Orthodontics</h3>
+            <p>Get your perfect smile with our orthodontic services.</p>
+        </div>
+    </section>
+
     <footer>
-        <p>&copy; 2024 Tooth Track. All rights reserved.</p>
+        <p>&copy; 2024 Teeth Track. All rights reserved.</p>
     </footer>
+
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
+
 </html>
