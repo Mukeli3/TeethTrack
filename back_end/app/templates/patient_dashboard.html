@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <nav class="navbar">
+            <h1>ToothTrack - Patient Dashboard</h1>
+            <ul class="nav-links">
+                <li><a href="#appointments">My Appointments</a></li>
+                <li><a href="#history">Treatment History</a></li>
+                <li><a href="#billing">Billing</a></li>
+                <li><a href="#logout">Logout</a></li>
+            </ul>
+        </nav>
+
+        <div class="main-content">
+            <div class="panel" id="appointments">
+                <h2>My Appointments</h2>
+                <div id="patientAppointmentList" class="list">
+                </div>
+            </div>
+
+            <div class="panel" id="history">
+                <h2>Treatment History</h2>
+                <div id="treatmentHistoryList" class="list">
+                </div>
+            </div>
+
+            <div class="panel" id="billing">
+                <h2>Billing</h2>
+                <div id="patientBillingList" class="list">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="addAppointment">
+    <h3>Add New Appointment</h3>
+    <form id="addAppointmentForm">
+        <label for="newAppointmentDate">Date:</label>
+        <input type="date" id="newAppointmentDate" required>
+
+        <label for="newAppointmentDentist">Dentist:</label>
+        <input type="text" id="newAppointmentDentist" required>
+
+        <label for="newAppointmentStatus">Status:</label>
+        <input type="text" id="newAppointmentStatus" required>
+
+        <button type="submit">Add Appointment</button>
+    </form>
+</div>
+
+<div id="addTreatment">
+    <h3>Add New Treatment Record</h3>
+    <form id="addTreatmentForm">
+        <label for="newTreatmentDate">Date:</label>
+        <input type="date" id="newTreatmentDate" required>
+
+        <label for="newTreatmentDetails">Treatment:</label>
+        <input type="text" id="newTreatmentDetails" required>
+
+        <label for="newTreatmentDentist">Dentist:</label>
+	<input type="text" id="newTreatmentDentist" required>
+
+	<button type="submit">Add Record</button>
+    </form>
+</div>
+   <script src="{{ url_for('static', filename='js/patient_dashboard.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('auth.index') }}">Home</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+            <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <h2>Register</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form action="/register" method="POST" id="registerForm">
+    <h2>Create Account</h2>
+    <input type="text" id="name" name="name" placeholder="Full Name" required>
+    <input type="email" id="email" name="email" placeholder="Email" required>
+    <input type="password" id="password" name="password" placeholder="Password" required>
+    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+    <input type="text" id="role" name="role" placeholder="Role">
+    <button type="submit">Register</button>
+</form>
+
+	<div class="back-button-container">
+        <span class="back-arrow">&larr;</span>
+        <button class="back-button" onclick="window.history.back()">Back</button>
+    </div>
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>
