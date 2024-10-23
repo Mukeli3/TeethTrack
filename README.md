@@ -13,7 +13,28 @@ TeethTrack is a modern dental clinic management system designed to facilitate th
 8. [References](#references)
 
 ## Project Overview
-TeethTrack is built using Python’s Flask framework for the backend and includes a PostgreSQL database. It enables patients to book appointments with dentists, dentists to manage appointments, and provides a billing system. Authentication is handled via JWT, and the frontend interacts with the backend API.
+TeethTrack is built using Python’s Flask framework for the backend and includes a SQLALCHEMY database. It enables patients to book appointments with dentists, dentists to manage appointments, and provides a billing system. Authentication is handled via JWT, and the frontend interacts with the backend API.
+# TeethTrack
+
+## Description
+TeethTrack is a web application designed to manage dental clinic operations efficiently.
+
+## Screenshots
+
+### Homepage
+![Homepage](Photos/homepage.webp)
+
+### User Login
+![Login Page](Photos/login.webp)
+
+### Registration Page
+![Registration Page](Photos/register.webp)
+
+### Patient Dashboard
+![Patient Dashboard](Photos/patient_dashboard.webp)
+
+### Dentist Dashboard
+![Dentist Dashboard](Photos/dentist_dashboard.webp)
 
 ## Features
 - **User Authentication**: JWT-based authentication for both patients and dentists.
@@ -63,7 +84,7 @@ TeethTrack/
 ### 1. Prerequisites
 
 - Python 3.8+
-- PostgreSQL
+- SQLALCHEMY
 - Git
 
 ### 2. Clone the Repository
